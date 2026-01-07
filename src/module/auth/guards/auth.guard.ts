@@ -1,11 +1,11 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Request, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { AuthService } from "../auth.service";
 import { Reflector } from "@nestjs/core";
 import { SKIP_AUTH } from "src/common/decorators/skip-auth.decorator";
-import { Request } from "express";
 import { AuthMessage } from "src/common/enums/message.enum";
 import { isJWT } from "class-validator";
 import { UserStatus } from "src/module/user/enum/status.enums";
+import { Request } from "express";
 
 @Injectable()
 export class AuthGuard implements CanActivate{
@@ -31,10 +31,10 @@ export class AuthGuard implements CanActivate{
 
     protected extractToken(request:Request){
         const { authorization } = request.headers;
-        if(!authorization || authorization?.trim() === ""){
+        if(!authorization || authorization.trim() === ""){
             throw new UnauthorizedException(AuthMessage.LoginIsRequired)
         }
-        const {bearer, token} = authorization?.split(" ");
+        const [bearer, token] = authorization?.split("");
         if(bearer.toLowerCase() !== "bearer" || !token || !isJWT(token)){
             throw new UnauthorizedException(AuthMessage.LoginIsRequired)
         }

@@ -7,13 +7,12 @@ import { BadRequestException, ConflictException, Inject, Injectable, Scope, Unau
 import { REQUEST } from "@nestjs/core";
 import { TokenService } from "./token.service";
 import { AuthDto } from "./dto/auth.dto";
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { AuthResponse } from "./types/response";
 import { AuthType } from "./enums/type.enum";
 import { AuthMethod } from "./enums/method.enum";
 import { isEmail, isMobilePhone } from "class-validator";
 import { randomInt } from "crypto";
-
 import { CookieKeys } from "src/common/enums/cookie.enum";
 import { CookiesOptionsToken } from "src/common/utils/cookie.util";
 import { PublicMessage } from "src/common/enums/message";
@@ -155,7 +154,7 @@ export class AuthService{
         if(!otp) throw new UnauthorizedException("please login again")
         const now = new Date();
         if(otp.expiresIn<now) throw new UnauthorizedException("the code expires in");
-        if(otp.code !== code) throw new UnauthorizedException("try again");
+        if(otp.code != code) throw new UnauthorizedException("try again");
 
         const accessToken = this.tokenService.craetAccessToken({ userId });
         if(otp.method === AuthMethod.Email) {

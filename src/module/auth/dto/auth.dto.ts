@@ -18,7 +18,7 @@ export class AuthDto{
     method:AuthMethod;
 }
 
-export class checkOtpDto{
+export class CheckOtpDto{
     @ApiProperty()
     @IsString()
     @Length(5,5,{message:"error!"})

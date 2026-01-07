@@ -1,8 +1,11 @@
 import { BaseEntity } from "src/common/abstracts/base.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, UpdateDateColumn } from "typeorm";
 import { UserStatus } from "../enum/status.enums";
 import { OtpEntity } from "./otp.entity";
 import { ProfileEntity } from "./profile.entity";
+import { EntityNames } from "src/common/enums/entity.enum";
+import { Roles } from "src/common/enums/role.enums";
+import { FollowEntity } from "./follow.entity";
 
 
 @Entity(EntityNames.User)
@@ -36,10 +39,10 @@ export class UserEntity extends BaseEntity{
     new_email:string;
 
     @Column({ nullable:true })
-    verify_phone:string;
+    verify_phone:boolean;
 
     @Column({ nullable:true })
-    verify_email:string;
+    verify_email:boolean;
 
     @Column({ nullable:true })
     password:string;
@@ -51,7 +54,10 @@ export class UserEntity extends BaseEntity{
     @JoinColumn()
     otp:OtpEntity;
 
-    @OneToOne(() =>ProfileEntity , otp => otp.user, {nullable:true})
+    @Column({nullable:true})
+    profileId:number;
+
+    @OneToOne(() =>ProfileEntity , profile => profile.userId, {nullable:true})
     @JoinColumn()
     profile:ProfileEntity;
 
@@ -60,4 +66,11 @@ export class UserEntity extends BaseEntity{
 
     @UpdateDateColumn()
     updated_at:Date;
+
+    @OneToMany(() => FollowEntity, follow => follow.following)
+    followers :FollowEntity[];
+
+    @OneToMany(() => FollowEntity, follow =>follow.follower)
+    following:FollowEntity[];
+
 }

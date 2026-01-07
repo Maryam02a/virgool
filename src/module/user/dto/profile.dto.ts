@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsEmail, IsEnum, IsMobilePhone, IsOptional, IsString, Length } from "class-validator";
 import { Gender } from "../enum/gender.enum";
+import { ValidationMessage } from "src/common/enums/message.enum";
 
 export class ProfileDto{
     @ApiPropertyOptional()
@@ -8,7 +9,7 @@ export class ProfileDto{
     @Length(5,30, {message:"نام کاربری وارد شده نامعتبر میباشد"})
     nick_name:string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({nullable:true})
     @IsOptional()
     @Length(10,150,{message:"بیوگرافی نمیتواند بیشتر از تعداد مجاز کاراکتر داشته باشد"})
     bio:string;
@@ -31,19 +32,19 @@ export class ProfileDto{
     x_profile:string;
 
     @ApiPropertyOptional({nullable:true})
-    linkdin_profile:string;
+    linkedin_profile:string;
 }
 
 export class ChangePhoneDto{
     @ApiProperty()
-    @IsMobilePhone("fa-IR", {} , {message:"شماره تماس نامعتبر میباشد"})
+    @IsMobilePhone("fa-IR", {} , {message:ValidationMessage.InvalidMobileFormat})
     phone:string;
 }
 
 export class ChangeEmailDto{
     @ApiProperty()
     @IsEmail({host_whitelist:["gmail.com", "yahoo.com"]}, {
-        message:"ایمیل وارد شده نامعتبر میباشد"
+        message:ValidationMessage.InvalidEmailFormat
     })
     email:string;
 }

@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt"
+import { JwtServicce } from "@nestjs/jwt";
 import { AccessTokenPayload, CookiePayload, EmailTokenPayload, PhoneTokenPayload } from "./types/payload";
 @Injectable()
 export class TokenService {
     constructor(
-        private jwtService :JwtService
+        private jwtService :JwtService,
     ){}
 
     createOptToken(payload :CookiePayload){
@@ -15,7 +15,7 @@ export class TokenService {
         return token
     }
 
-    verifyOtpToken(token :string){
+    verifyOtpToken(token :string):CookiePayload{
         try {
             return this.jwtService.verify(token, {
                 secret:process.env.ACCESS_TOKEN_SECRET,
@@ -33,7 +33,7 @@ export class TokenService {
         return token
     }
 
-    verifyAccessToken(token:string){
+    verifyAccessToken(token:string):AccessTokenPayload{
         try {
             return this.jwtService.verify(token, {
                 secret:process.env.ACCESS_TOKEN_SECRET,
